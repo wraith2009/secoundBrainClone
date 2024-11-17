@@ -111,3 +111,59 @@ export const DeleteContent = async (
     });
   }
 };
+
+export const UpdateContent = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { contentId } = req.params;
+  const { type, title, tags, link } = req.body;
+
+  try {
+    const getContent = await ContentModel.findById(contentId);
+    if (!getContent) {
+      res.status(404).json({
+        message: "Content not found",
+      });
+      return;
+    }
+
+    const isValidContent = ContentSchema.safeParse({
+      type,
+      title,
+      tags,
+      link,
+    });
+
+    if (!isValidContent.success) {
+      res.status(411).json({
+        message: "Validation Error",
+      });
+      return;
+    }
+
+    const updatedContent = ContentModel.findByIdAndUpdate(
+      {
+        _id: contentId,
+      },
+      {
+        $set: {
+          type,
+          title,
+          tags,
+          link,
+        },
+      }
+    );
+
+    res.status(200).json({
+      message: "Content Updated Successfully",
+      content: updatedContent,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+};
