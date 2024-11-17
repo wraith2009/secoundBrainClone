@@ -3,6 +3,7 @@ import cors from "cors";
 import UserRouter from "./routes/auth.routes";
 import tagRouter from "./routes/tag.routes";
 import ContentRouter from "./routes/content.routes";
+import LinkRouter from "./routes/link.routes";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/v1", UserRouter);
 app.use("/api/v1", tagRouter);
 app.use("/api/v1", ContentRouter);
+app.use("/api/v1", LinkRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World! is nodemon working hii");

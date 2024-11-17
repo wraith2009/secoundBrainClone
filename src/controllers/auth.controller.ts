@@ -2,6 +2,8 @@ import UserModel from "../models/user.model";
 import { UserSchema } from "../utils/validators/auth.validator";
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import { JWT_PASSWORD } from "../config";
 
 export const UserSignUp = async (
   req: Request,
@@ -87,11 +89,19 @@ export const UserSignIn = async (
         });
         return;
       }
-    }
 
-    res.status(200).json({
-      message: "User Logged In Successfully",
-    });
+      const token = jwt.sign(
+        {
+          id: existedUser._id,
+        },
+        JWT_PASSWORD
+      );
+
+      res.status(200).json({
+        message: "User Logged In Successfully",
+        token,
+      });
+    }
   } catch (error) {
     console.error("error during login", error);
     res.status(500).json({

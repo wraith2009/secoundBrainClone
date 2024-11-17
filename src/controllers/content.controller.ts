@@ -22,26 +22,34 @@ export const CreateContent = async (
     if (!isValidContent.success) {
       res.status(411).json({
         message: "Validation Error",
+        errors: isValidContent.error.format(),
       });
       return;
     }
 
-    const existingTag = await TagModel.findOne({ title: tags });
-
-    if (!existingTag) {
-      const NewTag = await TagModel.create({ title: tags });
-      if (!NewTag) {
-        res.status(500).json({
-          message: "Internal Server Error",
-        });
-        return;
-      }
+    if (!Array.isArray(tags)) {
+      res.status(400).json({
+        message: "tags must be an array",
+      });
+      return;
     }
+
+    const tagtitle = await Promise.all(
+      tags.map(async (tagTitle: string) => {
+        let tag = await TagModel.findOne({ title: tagTitle });
+
+        if (!tag) {
+          tag = await TagModel.create({ title: tagTitle });
+        }
+
+        return tag.title;
+      })
+    );
 
     const newContent = await ContentModel.create({
       type,
       title,
-      tags,
+      tags: tagtitle,
       userId,
       link,
     });
@@ -51,7 +59,7 @@ export const CreateContent = async (
       content: newContent,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error creating content:", error);
     res.status(500).json({
       message: "Internal Server Error",
     });
