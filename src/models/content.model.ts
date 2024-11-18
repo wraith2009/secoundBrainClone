@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-export const contentTypes = ["image", "video", "article", "audio"];
+export const contentTypes = ["Tweet", "video", "Document", "Link"];
 
 const ContentSchema = new Schema({
   link: {
