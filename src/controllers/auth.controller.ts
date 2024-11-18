@@ -100,6 +100,7 @@ export const UserSignIn = async (
       res.status(200).json({
         message: "User Logged In Successfully",
         token,
+        user: existedUser,
       });
     }
   } catch (error) {
