@@ -73,8 +73,6 @@ export const GetContent = async (
   res: Response
 ): Promise<void> => {
   const { userId } = req.body;
-  console.log("req body ", req.body);
-  console.log("from home page", userId);
   try {
     const existingUser = await UserModel.findById(userId);
     if (!existingUser) {
@@ -85,7 +83,7 @@ export const GetContent = async (
     }
 
     const content = await ContentModel.find({ userId });
-    console.log(content);
+
     res.status(200).json({
       message: "Content Retrieved Successfully",
       content: content,

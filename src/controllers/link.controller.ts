@@ -50,7 +50,6 @@ export const GetContentFromLink = async (
   const { token } = req.body;
 
   try {
-    console.log("token", token);
     const existingLink = await LinkModel.findOne({ token });
     if (!existingLink) {
       res.status(404).json({
@@ -58,8 +57,6 @@ export const GetContentFromLink = async (
       });
       return;
     }
-
-    console.log("existingLink", existingLink);
 
     const UserId = existingLink.userId;
 
