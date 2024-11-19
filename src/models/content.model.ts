@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-export const contentTypes = ["Tweet", "video", "Document", "Link"];
+export const contentTypes = ["Tweet", "Video", "Document", "Link"];
 
 const ContentSchema = new Schema({
   link: {
@@ -26,6 +26,9 @@ const ContentSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "UserModel",
     required: true,
+  },
+  content: {
+    type: String,
   },
 });
 

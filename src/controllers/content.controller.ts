@@ -8,7 +8,7 @@ export const CreateContent = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { type, title, tags, userId, link } = req.body;
+  const { type, title, tags, userId, link, content } = req.body;
 
   try {
     const isValidContent = ContentSchema.safeParse({
@@ -17,6 +17,7 @@ export const CreateContent = async (
       tags,
       userId,
       link,
+      content,
     });
 
     if (!isValidContent.success) {
@@ -52,6 +53,7 @@ export const CreateContent = async (
       tags: tagtitle,
       userId,
       link,
+      content,
     });
 
     res.status(200).json({
@@ -71,6 +73,8 @@ export const GetContent = async (
   res: Response
 ): Promise<void> => {
   const { userId } = req.body;
+  console.log("req body ", req.body);
+  console.log("from home page", userId);
   try {
     const existingUser = await UserModel.findById(userId);
     if (!existingUser) {
@@ -125,7 +129,7 @@ export const UpdateContent = async (
   res: Response
 ): Promise<void> => {
   const { contentId } = req.params;
-  const { type, title, tags, link } = req.body;
+  const { type, title, tags, link, content } = req.body;
 
   try {
     const getContent = await ContentModel.findById(contentId);
@@ -141,6 +145,7 @@ export const UpdateContent = async (
       title,
       tags,
       link,
+      content,
     });
 
     if (!isValidContent.success) {
@@ -160,6 +165,7 @@ export const UpdateContent = async (
           title,
           tags,
           link,
+          content,
         },
       }
     );
