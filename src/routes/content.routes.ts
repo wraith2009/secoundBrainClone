@@ -1,14 +1,15 @@
-import express from "express";
+import { Router } from "express";
 import {
   CreateContent,
   GetContent,
   DeleteContent,
 } from "../controllers/content.controller";
+import { jwtAuth } from "../middleware/auth.middleware";
 
-const ContentRouter = express.Router();
+const ContentRouter = Router();
 
-ContentRouter.post("/create-content", CreateContent);
-ContentRouter.post("/get-content", GetContent);
-ContentRouter.get("/delete-content", DeleteContent);
+ContentRouter.route("/create-content").post(jwtAuth, CreateContent);
+ContentRouter.route("/get-content").post(jwtAuth, GetContent);
+ContentRouter.route("/delete-content").post(jwtAuth, DeleteContent);
 
 export default ContentRouter;
