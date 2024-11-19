@@ -1,17 +1,37 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { JWT_PASSWORD } from "../config";
 
-export const jwtAuth = (req: Request, res: Response, next: NextFunction) => {
-  const header = req.headers["authorization"];
-  const decoded = jwt.verify(header as string, JWT_PASSWORD);
-  if (decoded) {
-    //@ts-ignore
+interface AuthenticatedRequest extends Request {
+  userId?: string;
+}
+
+export const jwtAuth = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void => {
+  try {
+    const header = req.headers["authorization"];
+
+    if (!header) {
+      res.status(401).json({ message: "Authorization header is missing." });
+      return;
+    }
+
+    const token = header.startsWith("Bearer ") ? header.slice(7) : header;
+
+    const decoded = jwt.verify(token, JWT_PASSWORD) as JwtPayload;
+
+    if (!decoded || typeof decoded !== "object" || !decoded.id) {
+      res.status(403).json({ message: "Invalid token." });
+    }
+
     req.userId = decoded.id;
+
     next();
-  } else {
-    res.status(403).json({
-      message: "You are not logged in",
-    });
+  } catch (error) {
+    console.error("JWT verification error:", error);
+    res.status(403).json({ message: "Token verification failed." });
   }
 };
