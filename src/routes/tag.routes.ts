@@ -1,9 +1,9 @@
-import express from "express";
+import { Router } from "express";
 import { CreateTag, GetTags } from "../controllers/tag.controller";
 
-const tagRouter = express.Router();
+const tagRouter = Router();
 
-tagRouter.post("/createTag", CreateTag);
-tagRouter.get("/getTag", GetTags);
+tagRouter.route("/createTag").post(CreateTag);
+tagRouter.route("/getTags").get(GetTags);
 
 export default tagRouter;
