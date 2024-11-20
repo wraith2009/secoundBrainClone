@@ -10,7 +10,7 @@ export const jwtAuth = (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
-): void => {
+) => {
   try {
     const header = req.headers["authorization"];
 
