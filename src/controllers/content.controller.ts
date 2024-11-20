@@ -126,8 +126,8 @@ export const UpdateContent = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { contentId } = req.params;
-  const { type, title, tags, link, content } = req.body;
+  const { contentId, type, title, tags, link, content } = req.body;
+  console.log("content sent by frontend", req.body);
 
   try {
     const getContent = await ContentModel.findById(contentId);
@@ -137,26 +137,8 @@ export const UpdateContent = async (
       });
       return;
     }
-
-    const isValidContent = ContentSchema.safeParse({
-      type,
-      title,
-      tags,
-      link,
-      content,
-    });
-
-    if (!isValidContent.success) {
-      res.status(411).json({
-        message: "Validation Error",
-      });
-      return;
-    }
-
-    const updatedContent = ContentModel.findByIdAndUpdate(
-      {
-        _id: contentId,
-      },
+    const updatedContent = await ContentModel.findByIdAndUpdate(
+      contentId,
       {
         $set: {
           type,
@@ -165,7 +147,8 @@ export const UpdateContent = async (
           link,
           content,
         },
-      }
+      },
+      { new: true }
     );
 
     res.status(200).json({
@@ -173,7 +156,7 @@ export const UpdateContent = async (
       content: updatedContent,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error updating content:", error);
     res.status(500).json({
       message: "Internal Server Error",
     });
