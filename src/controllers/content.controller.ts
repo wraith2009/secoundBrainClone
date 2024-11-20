@@ -10,6 +10,13 @@ export const CreateContent = async (
 ): Promise<void> => {
   const { type, title, tags, userId, link, content } = req.body;
 
+  let newTitle = "";
+  if (title.length > 15) {
+    newTitle = title.substring(0, 15);
+  } else {
+    newTitle = title;
+  }
+
   try {
     const isValidContent = ContentSchema.safeParse({
       type,
@@ -49,7 +56,7 @@ export const CreateContent = async (
 
     const newContent = await ContentModel.create({
       type,
-      title,
+      title: newTitle,
       tags: tagtitle,
       userId,
       link,

@@ -12,14 +12,11 @@ export const jwtAuth = (
   next: NextFunction
 ) => {
   try {
-    const header = req.headers["authorization"];
+    const token = req.header("Authorization")?.replace("Bearer ", "") ?? "";
 
-    if (!header) {
-      res.status(401).json({ message: "Authorization header is missing." });
-      return;
+    if (!token) {
+      res.status(403).json({ message: "No token provided." });
     }
-
-    const token = header.startsWith("Bearer ") ? header.slice(7) : header;
 
     const decoded = jwt.verify(token, JWT_PASSWORD) as JwtPayload;
 
