@@ -127,7 +127,6 @@ export const UpdateContent = async (
   res: Response
 ): Promise<void> => {
   const { contentId, type, title, tags, link, content } = req.body;
-  console.log("content sent by frontend", req.body);
 
   try {
     const getContent = await ContentModel.findById(contentId);
