@@ -10,7 +10,18 @@ const tag_routes_1 = __importDefault(require("./routes/tag.routes"));
 const content_routes_1 = __importDefault(require("./routes/content.routes"));
 const link_routes_1 = __importDefault(require("./routes/link.routes"));
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+const corsOptions = {
+    origin: [
+        "https://brainly-frontend-ovevla22r-rahuls-projects-0785da91.vercel.app",
+        "http://localhost:5173",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+};
+app.use((0, cors_1.default)(corsOptions));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 // Routes
