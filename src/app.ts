@@ -7,34 +7,30 @@ import LinkRouter from "./routes/link.routes";
 
 const app = express();
 
-// Update CORS configuration to handle multiple deployment URLs
 const allowedOrigins = [
-  // Vercel preview deployments typically have this pattern
-  /^https:\/\/brainly-frontend[a-zA-Z0-9-]*.vercel.app$/,
+  "https://brainly-frontend-sable.vercel.app",
   "http://localhost:5173",
-  // Add your production URL when ready
 ];
 
 const corsOptions = {
-  origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
-    // Allow requests with no origin (like mobile apps or curl requests)
+  origin: function (
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean) => void
+  ) {
     if (!origin) {
       callback(null, true);
       return;
     }
 
-    // Check if the origin matches any of our patterns
-    const isAllowed = allowedOrigins.some(allowedOrigin => {
-      if (allowedOrigin instanceof RegExp) {
-        return allowedOrigin.test(origin);
-      }
-      return allowedOrigin === origin;
-    });
+    const isAllowed = allowedOrigins.some(
+      (allowedOrigin) => allowedOrigin === origin
+    );
 
     if (isAllowed) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      console.error(`CORS Error: Origin ${origin} not allowed.`);
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
@@ -44,11 +40,11 @@ const corsOptions = {
     "Authorization",
     "X-Requested-With",
     "Accept",
-    "Origin"
+    "Origin",
   ],
   exposedHeaders: ["Set-Cookie"],
   preflightContinue: false,
-  optionsSuccessStatus: 204
+  optionsSuccessStatus: 204,
 };
 
 // Apply CORS middleware first
@@ -82,7 +78,7 @@ app.use((error: any, req: any, res: any, next: any) => {
   res.json({
     error: {
       message: error.message,
-      status: error.status || 500
+      status: error.status || 500,
     },
   });
 });
