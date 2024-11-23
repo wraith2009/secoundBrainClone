@@ -22,6 +22,7 @@ export const googleLogin = async (
 ): Promise<void> => {
   const code = req.query.code as string | undefined;
 
+  console.log("code", code);
   if (!code) {
     res.status(400).json({
       message: "Authorization code is required",
@@ -37,9 +38,9 @@ export const googleLogin = async (
     const userRes = await axios.get(
       `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokens.access_token}`
     );
-
+    console.log(userRes);
     const { email } = userRes.data;
-
+    console.log(email);
     if (!email) {
       res.status(400).json({
         message: "Failed to fetch user email from Google",
@@ -49,6 +50,7 @@ export const googleLogin = async (
     }
 
     let existingUser = await UserModel.findOne({ email });
+    console.log(existingUser);
     if (!existingUser) {
       existingUser = await UserModel.create({ email });
     }
