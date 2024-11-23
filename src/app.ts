@@ -4,6 +4,7 @@ import UserRouter from "./routes/auth.routes";
 import tagRouter from "./routes/tag.routes";
 import ContentRouter from "./routes/content.routes";
 import LinkRouter from "./routes/link.routes";
+import GoogleRouter from "./routes/google.route";
 
 const app = express();
 
@@ -60,6 +61,7 @@ app.get("/", (req, res) => {
 });
 
 // Routes
+app.use("/api/v1/auth", GoogleRouter);
 app.use("/api/v1", UserRouter);
 app.use("/api/v1", tagRouter);
 app.use("/api/v1", ContentRouter);

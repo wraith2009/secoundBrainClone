@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
 const db_1 = require("./db");
 const config_1 = require("./config");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, db_1.connectDB)();

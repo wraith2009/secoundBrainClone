@@ -9,6 +9,7 @@ const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const tag_routes_1 = __importDefault(require("./routes/tag.routes"));
 const content_routes_1 = __importDefault(require("./routes/content.routes"));
 const link_routes_1 = __importDefault(require("./routes/link.routes"));
+const google_route_1 = __importDefault(require("./routes/google.route"));
 const app = (0, express_1.default)();
 const allowedOrigins = [
     "https://brainly-frontend-sable.vercel.app",
@@ -52,6 +53,7 @@ app.get("/", (req, res) => {
     res.send("API is running");
 });
 // Routes
+app.use("/api/v1/auth", google_route_1.default);
 app.use("/api/v1", auth_routes_1.default);
 app.use("/api/v1", tag_routes_1.default);
 app.use("/api/v1", content_routes_1.default);

@@ -18,7 +18,10 @@ const config_1 = require("./config");
 function connectDB() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const db = yield mongoose_1.default.connect(config_1.MONGO_URI);
+            if (!config_1.MONGODB_URI) {
+                throw new Error("MONGO_URI is not defined");
+            }
+            const db = yield mongoose_1.default.connect(config_1.MONGODB_URI);
             console.log(`MongoDB connected: ${db.connection.host}`);
         }
         catch (error) {
