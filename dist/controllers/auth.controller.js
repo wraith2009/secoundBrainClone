@@ -36,9 +36,7 @@ const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const { tokens } = yield oauth2Client.getToken(code);
         oauth2Client.setCredentials(tokens);
         const userRes = yield axios_1.default.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokens.access_token}`);
-        console.log(userRes);
         const { email } = userRes.data;
-        console.log(email);
         if (!email) {
             res.status(400).json({
                 message: "Failed to fetch user email from Google",
@@ -46,7 +44,6 @@ const googleLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             return;
         }
         let existingUser = yield user_model_1.default.findOne({ email });
-        console.log(existingUser);
         if (!existingUser) {
             existingUser = yield user_model_1.default.create({ email });
         }
