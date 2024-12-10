@@ -5,6 +5,7 @@ import tagRouter from "./routes/tag.routes";
 import ContentRouter from "./routes/content.routes";
 import LinkRouter from "./routes/link.routes";
 import GoogleRouter from "./routes/google.route";
+import SearchRouter from "./routes/search.routes";
 
 const app = express();
 
@@ -48,26 +49,22 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-// Apply CORS middleware first
 app.use(cors(corsOptions));
 
-// Other middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Health check route
 app.get("/", (req, res) => {
   res.send("API is running");
 });
 
-// Routes
 app.use("/api/v1/auth", GoogleRouter);
 app.use("/api/v1", UserRouter);
 app.use("/api/v1", tagRouter);
 app.use("/api/v1", ContentRouter);
 app.use("/api/v1", LinkRouter);
+app.use("/api/v1", SearchRouter);
 
-// Error handling middleware
 app.use((req, res, next) => {
   const error: any = new Error("Not found");
   error.status = 404;
@@ -75,7 +72,7 @@ app.use((req, res, next) => {
 });
 
 app.use((error: any, req: any, res: any, next: any) => {
-  console.error(error); // Log the error for debugging
+  console.error(error);
   res.status(error.status || 500);
   res.json({
     error: {

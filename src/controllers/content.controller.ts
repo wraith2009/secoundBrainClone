@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import { ContentSchema } from "../utils/validators/content.validator";
 import UserModel from "../models/user.model";
 import TagModel from "../models/tags.model";
+import { generateEmbeddings } from "./embedding.controller";
+import { pc } from "../db";
 
 export const CreateContent = async (
   req: Request,
@@ -62,6 +64,21 @@ export const CreateContent = async (
       link,
       content,
     });
+
+    const vector = await generateEmbeddings({ text: content });
+
+    const pineconeIndex = pc.index("brainly");
+    await pineconeIndex.upsert([
+      {
+        id: newContent._id.toString(),
+        values: vector,
+        metadata: {
+          title: newTitle,
+          link,
+          content,
+        },
+      },
+    ]);
 
     res.status(200).json({
       message: "Content Created Successfully",
